@@ -1,0 +1,9 @@
+*.log
+*.aux
+*.xlsx
+*.json
+ConfBook_prueba.pdf
+*.out
+images/
+errors.txt
+__pycache__/

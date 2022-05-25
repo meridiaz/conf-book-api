@@ -10,7 +10,7 @@ import string
 from string import Template
 
 import httplib2
-from apiclient import discovery
+from googleapiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
@@ -27,10 +27,11 @@ from settings import *
 
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
+#APPLICATION_NAME = 'ConfBook'
 APPLICATION_NAME = 'Yearbook Generator'
 
 IMAGE_SIZE = 512, 512 # Maximum participant image size
-LIMIT_DESCRIPTION = 200 # Maximum participant description size
+LIMIT_DESCRIPTION = 420 # Maximum participant description size
 
 ERRORS_FILE = "errors.txt"
 
@@ -100,17 +101,21 @@ class Creator():
         else:
             id = 1
             Fields = namedtuple("Fields", ' '.join(HEADER))
+            print(values)
             for row in values:
                 id += 1
                 if row and len(row) == len(HEADER):  # in case of an empty row (deleted by hand from the spreadsheet)
+                    print("1")
                     fields = Fields(*row)
                     self.fields.append(fields)
                 elif (len(row) < len(HEADER)) and (len(row) > (len(HEADER) - 5)):
+                    print("2")
                     while(len(row) != len(HEADER)):
                         row.append("-")
                     fields = Fields(*row)
                     self.fields.append(fields)
                 else:
+                    print("3")
                     self.write_error("- Error. Not enough values in row " + str(id) + ": "+ str(row) + "\n")
 
 
@@ -306,11 +311,14 @@ class Creator():
         msg = r"\section*{Participants}" + "\n"
 
         len_fields = len(self.fields)
+        #print("in self.fields namedtuple_to_latex")
+        #print(self.fields)
         for row in self.fields:
             porc = int(round((id*100)/103))
             print(str(porc) + "%")
-
+            #print(row)
             row = c.make_chars_latex_friendly(row)
+            #print(row)
             image = c.download_image(row, id)
             flag = c.get_flag(row, id)
             description = c.cut_presentation(row.presentation)
@@ -338,17 +346,17 @@ class Creator():
             if flag:
                 msg += r"\hspace{0.2cm}\includegraphics{" + flag + "}" + "\n"
 
-            if row.graduation:
-                msg += (r"\hspace{0.1cm}{\scriptsize (PhD " + row.graduation + ")}\n")
+            """ if row.graduation != "-":
+                msg += (r"\hspace{0.1cm}{\scriptsize (PhD " + row.graduation + ")}\n") """
 
             # Checks if it is a Twitter handle
             if len(row.twitter.split()) == 1 and row.twitter[0] == "@":
                 msg += r"\hspace{0.2cm}\textit{" + row.twitter + r"}" + "\n"
-
-            if row.hiring == "Yes":
+            
+            if hasattr(row, "hiring") and row.hiring == "Yes":
                 msg += r"\hspace{0.1cm}\includegraphics[height=0.5cm]{figs/hiring.png}" + "\n"
-
-            if row.looking == "Yes":
+            
+            if hasattr(row, "looking") and row.looking == "Yes":
                 msg += r"\hspace{0.1cm}\includegraphics[height=0.4cm]{figs/jobs.png}" + "\n"
 
             msg += r"\\" + "\n" + row.position + " at " + row.affiliation + r"\\" + "\n"
@@ -356,7 +364,7 @@ class Creator():
             if description:
                 msg += (r"{\footnotesize " + description + r"}\\" + "\n")
 
-            if row.homepage:
+            if row.homepage != "-":
                 msg += (r"\includegraphics[height=0.35cm]{figs/internet.png}\hspace{0.1cm}" +
                         r"{\footnotesize \color{color1}\url{" + row.homepage + r"}}" + "\n")
 
@@ -378,14 +386,17 @@ class Creator():
 
 if __name__ == "__main__":
     s = Template(open('defs.tpl').read())
+    print(s)
     tex_header = s.safe_substitute(conference_long = LONG_NAME, conference_short = SHORT_NAME,
                                    conference_place = PLACE, conference_dates = DATES,
                                    conference_frontimage = FRONT_IMAGE, conference_logo = LOGO,
                                    logo_height = LOGO_HEIGHT, frontimage_width = FRONT_IMAGE_WIDTH)
-
+    print(tex_header)
     c = Creator()
     c.spreadsheet_to_namedtuple()
     participants = c.namedtuple_to_latex()
+    print("FIELDS")
+    print(c.fields)
     with open("participants.tex", "w", encoding="utf-8") as partic:
         partic.write(participants)
 
