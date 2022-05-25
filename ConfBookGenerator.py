@@ -363,8 +363,8 @@ class Creator():
 
             if description:
                 msg += (r"{\footnotesize " + description + r"}\\" + "\n")
-
-            if row.homepage != "-":
+            
+            if row.homepage != "-" and row.homepage != "":
                 msg += (r"\includegraphics[height=0.35cm]{figs/internet.png}\hspace{0.1cm}" +
                         r"{\footnotesize \color{color1}\url{" + row.homepage + r"}}" + "\n")
 

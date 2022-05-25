@@ -4,6 +4,6 @@
 *.json
 ConfBook_prueba.pdf
 *.out
-images/
+images/img*
 errors.txt
 __pycache__/
