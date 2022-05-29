@@ -386,17 +386,17 @@ class Creator():
 
 if __name__ == "__main__":
     s = Template(open('defs.tpl').read())
-    print(s)
+    #print(s)
     tex_header = s.safe_substitute(conference_long = LONG_NAME, conference_short = SHORT_NAME,
                                    conference_place = PLACE, conference_dates = DATES,
                                    conference_frontimage = FRONT_IMAGE, conference_logo = LOGO,
                                    logo_height = LOGO_HEIGHT, frontimage_width = FRONT_IMAGE_WIDTH)
-    print(tex_header)
+    #print(tex_header)
     c = Creator()
     c.spreadsheet_to_namedtuple()
     participants = c.namedtuple_to_latex()
-    print("FIELDS")
-    print(c.fields)
+    #print("FIELDS")
+    #print(c.fields)
     with open("participants.tex", "w", encoding="utf-8") as partic:
         partic.write(participants)
 
