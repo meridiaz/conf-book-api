@@ -14,7 +14,7 @@ PLACE = "Braga, Portugal"
 DATES = "May 31\\textsuperscript{st} - June 3\\textsuperscript{rd}, 2022"
 
 # Front Image of the ConfBook and logo of the conference (and sizes)
-FRONT_IMAGE = "logoBraga.jpeg"
+FRONT_IMAGE = "logoBraga+faias.jpeg"
 LOGO = "logoFAIaS.png"
 FRONT_IMAGE_WIDTH = "14cm"
 LOGO_HEIGHT = "1cm"

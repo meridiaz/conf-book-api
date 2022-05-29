@@ -101,7 +101,7 @@ class Creator():
         else:
             id = 1
             Fields = namedtuple("Fields", ' '.join(HEADER))
-            print(values)
+            #print(values)
             for row in values:
                 id += 1
                 if row and len(row) == len(HEADER):  # in case of an empty row (deleted by hand from the spreadsheet)
