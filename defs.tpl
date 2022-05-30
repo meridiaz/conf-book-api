@@ -66,7 +66,7 @@ head=0ex,foot=3ex}
 \vfill
 \centering
 \begin{Huge}
-{\bf CONFERENCE YEARBOOK} \\
+{\bf FAIaS LTTA Book} \\
 \end{Huge}
 \vspace{1cm}
 \includegraphics[width=$frontimage_width]{$conference_frontimage}%
